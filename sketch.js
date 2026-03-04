@@ -31,206 +31,8 @@ Developed with assistance from Claude AI (Anthropic) for:
 - Academic research integration and narrative design feedback
 */
 
-// Story object base code - each node contains texts and path choices
-let story = {
-  start: {
-    //Ideally content warning goes in the menu/title page. But otherwise will be here.
-
-    //Start of exposition sequence. door visual appears on this node.
-
-    text: "",
-
-    options: { a: "ENTER" },
-  },
-
-  ENTER: {
-    //
-
-    text:
-      "Congrats! you moved to London. Flat is nice. Flatmates are nice too. Are we going to the pub tonight?",
-
-    // First decision point - with minor consequence - Ultimately leads the player to the next stage. Signifies futillity
-
-    options: { a: "Yep!", b: "Nah. Going to bed now" },
-  },
-
-  "Yep!": {
-    text: "Drank waaaay too much. Getting sleepy.  Good night!",
-    options: { a: "Sleep" },
-  },
-  "Nah. Going to bed now": {
-    text: "Straight to bed now, sleep tight",
-    options: { a: "Sleep" },
-  },
-  Sleep: {
-    text: "Night 01. The mattress feels a bit lumpy",
-    options: { a: "Inspect mattress", b: "Go back to sleep" }, //Another minor decision point, will affect player's state in the morning (a.Fix mattress > sleep well / b. Ignore issue > back will hurt in the morning)
-  },
-  "Inspect mattress": {
-    //Path to positive outcome
-    text: "One of the slats seems to have gone out of place",
-    options: { a: "Fix" },
-  },
-  "Go back to sleep": {
-    // Said consequence of ignoring the issue
-    text: "Back hurts like a bitch in the morning",
-    options: { a: "Next" },
-  },
-  Fix: {
-    text: "Had a decent night's sleep!",
-    options: { a: "Next" },
-  },
-  Next: {
-    //The turning point. You wake up with bites and investigate
-    text: "Night 05, You wake up with bites",
-    options: { a: "Inspect bites", b: "Google bug bites", c: "Scratch" },
-  },
-  "Inspect bites": {
-    // Some playtesters got stuck in a loop here (current node + "Google bug bites", scratch). To progress you need to choose "Go to bed"
-
-    text:
-      "There's a huge red spot on your temple. It's puffy in the morning but flattens and spreads by the evening. There's a cluster of smaller bites on your shoulder. Very close together.",
-    options: {
-      a: "Google bug bites",
-      b: "Scratch",
-      c: "Go to bed",
-    },
-  },
-  "Google bug bites": {
-    text:
-      "Search results show bed bugs, fleas, mites. The bite clusters match bed bugs. Fuck.",
-    options: { a: "Inspect bites", b: "Scratch", c: "Go to bed" },
-  },
-  Scratch: {
-    //Foreshadowing self harm escalation later on
-    text: "You're bleeding",
-    options: { a: "Inspect bites", b: "Google bug bites", c: "Go to bed" },
-  },
-  "Go to bed": {
-    text:
-      "Night 08. You wake up with more bites on your face and back. One is right on your lip",
-    options: {
-      a: "Consult flatmates",
-      b: "Lift mattress",
-    },
-  },
-  "Consult flatmates": {
-    text:
-      "Flatmate #1 says airing the mattress outside might help with the stress",
-    options: { a: "Lift mattress" },
-  },
-
-  "Lift mattress": {
-    text: "You lift the mattress to air it out...",
-    options: { a: "Continue" },
-  },
-  Continue: {
-    // The reveal. You always reach this point regardless of chosen path
-    text: "There are bugs. Small, brown, flat bugs. Everywhere.",
-
-    //Limited but different emotional response choices reinforce the illusion of agency.
-    options: { a: "Panic", b: "PANIC", c: "Stay calm" },
-  },
-  Panic: {
-    text: "Ew. EWWWW",
-    options: { a: "PANIC" },
-  },
-  PANIC: {
-    text:
-      "You shit yourself. Your flatmate shits himself. Your other flatmate is fine. What now?",
-    options: {
-      a: "Contact landlord",
-      b: "Contact council",
-      c: "Deal with it yourself.",
-    },
-  },
-  "Stay calm": {
-    text: "Eh gross. Bugs are bugs. What now?",
-    options: {
-      a: "Contact landlord",
-      b: "Contact council",
-      c: "Deal with it yourself.",
-    },
-  },
-  "Contact landlord": {
-    // This path is about dismissal. Had gendered dismissal in mind but thought it would come across as too blunt in text.
-    text:
-      "Your landlord says the bugs probably came with you. He drops off spray cans. 'That should do it.'",
-    options: { a: "Push back", b: "Fine. DIY" },
-  },
-
-  "Push back": {
-    //dissmisal path continuation
-    text: "You ask for professional pest control. He stops replying to texts.",
-    options: { a: "Deal with it yourself." },
-  },
-
-  "Fine. DIY": {
-    text: "You spray everything. Twice. The bites continue.",
-    options: { a: "Deal with it yourself." },
-  },
-  "Contact council": {
-    //bureaucratic nightmare path
-    text:
-      "Council website: 'Submit request online. Processing takes 2-4 weeks.' Your bites can't wait.",
-    options: { a: "Deal with it yourself." },
-  },
-  "Deal with it yourself.": {
-    // All paths force you here eventually. Experiencing a systemic let down and isolation.
-    text: "Fine. You'll handle this. What's the plan?",
-    options: { a: "DIY", b: "Professional" },
-  },
-
-  DIY: {
-    // Isolation leads to sanity slipage
-    text:
-      "You order diatomaceous earth and spray. Week 1: still bites. Week 2: more powder. Week 3: you're checking the mattress TWICE DAILY. Flipping it once a week",
-    options: { a: "Night 28" },
-  },
-
-  Professional: {
-    // financial toll leads to sanity slipage
-    text:
-      "£800 for heat treatment. They come Tuesday. You evacuate for the day. That night: new bites. You book another treatment. Your flatmate offers her room while you wait for a new mattress. All your clothes go into plastic bags on the balcony. You iron everything. Then iron them again.",
-    options: { a: "Night 28" },
-  },
-  "Night 28": {
-    // Start of post treatment sanity sink. Progresion is chronological between nights 28-35-37 to "Cut skin open"
-    text:
-      "Night 28. You've been sleeping on the plastic wrap since the mattress arrived. Everything in this room feels contaminated.",
-    options: { a: "Night 35" },
-  },
-
-  "Night 35": {
-    //Start of delusional parasitosis symptoms
-    text:
-      "Night 35. You feel crawling on your skin. Static electricity, you tell yourself. But you can't shake the eerie feeling that you're not alone. You can't sleep.",
-    options: { a: "Night 37" },
-  },
-
-  "Night 37": {
-    //Escalation
-    text:
-      "Night 37. You feel pinpricks. Biting sensations. Every speck of dust could be an egg latched onto your clothes. Even after a hot shower, it's still there. You NEED to see what's underneath.",
-    options: { a: "Cut skin open", b: "Cut skin open", c: "Cut skin open" },
-  },
-  "Cut skin open": {
-    // Peak of story. Evidence gathering is a characteristic of DP. Self harming in the process of attempting to prove one's sanity.
-    text:
-      "You dig in with your nails. There's something small, beady, and ugly there—you can present it to your landlord. You're bleeding but clean. The dots are everywhere now.",
-    options: { a: "End" },
-  },
-  End: {
-    text:
-      "A few months have passed. You still flip your mattress once a week. Spray cans and diatomaceous earth at the ready. Your bed is a complete fortress. You've bled money in the process. But your room is yours again. You are safe now.",
-    options: { a: "About Delusory Parasitosis", b: "Return to Menu" },
-  },
-  "About Delusory Parasitosis": {
-    text:
-      "Delusory parasitosis (DP) is a condition where individuals remain convinced of parasitic infestation, despite no evidence. Experiencing pinpricks, biting and crawling sensations.They have extensive knowledge of the parasite they are dealing with in terms of appearance and behaviour. They gather evidence of infestation to prove their sanity, sometimes from their own body. Patients with DP are disproportionately female (Hinkle, 2000). This project explores the psychological aftermath of actual bed bug infestations.",
-    options: { a: "Return to Menu" },
-  },
-};
+// Variable for story structure json
+let story; 
 
 let currentNode = "start"; //Tracks player's current position in the story
 let buttons = [];
@@ -238,13 +40,16 @@ let gameState; // playing or idle, to return to menu
 let visitCount = {}; // Tracks visits to each node
 let startTime; // for fullscreen instruction to appear in a delay
 
+
+
 //visuals > Overall: I've used grainy visuals for a retro horror game feel
 let doorImg;
 let bugImg;
 
 function preload() {
+  story = loadJSON('story.json');
   doorImg = loadImage("door.png");
-  bugImg = loadImage("BUG.png")
+  bugImg = loadImage("BUG.png");
 }
 
 function setup() {
@@ -254,7 +59,8 @@ function setup() {
   textFont("Courier New");
   fill(255);
   noCursor();
-   // Force CSS cursor to none
+   
+  // Force CSS cursor to none
   document.body.style.cursor = 'none';
   
   // Create HTML cursor element
@@ -265,6 +71,7 @@ function setup() {
   cursorImg.style('z-index', '9999'); // stays on top of everything
   cursorImg.style('width', '75px');
   cursorImg.style('height', '60px');
+
   gameState = "loading"; // short delay to ensure proper initialization before showing menu
    setTimeout(() => {
     gameState = "menu";
