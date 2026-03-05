@@ -1,7 +1,18 @@
 html, body {
   margin: 0;
   padding: 0;
+  overflow: hidden; /* Prevents scrollbars */
+  cursor: none !important; /* Hides default cursor */
 }
+
 canvas {
   display: block;
+}
+
+#custom-cursor {
+  position: absolute;
+  pointer-events: none; /* Allows clicking through cursor */
+  z-index: 9999; /* Keeps cursor on top */
+  width: 75px;
+  height: 60px;
 }

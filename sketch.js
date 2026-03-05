@@ -1,38 +1,6 @@
-/*
-"Moved to London, Got Bed Bugs", Michaella Miller, Updated: 20.01.2026
-
-On the tenth day of moving into my London flat, I’ve discovered my mattress is infested with bed bugs. What ensued post discovery and treatment was paranoia that overtook my everyday life. I have spent my free time ironing my clothes. Flipped my (new) mattress once a week. Bleeding money into anti bed bug products. My room was no longer my own. It belonged to them really.  
-I have adapted my dealings with bed bugs into an interactive, choose your own adventure game. Enjoy.
-
-
-Instructions:  Using the mouse, click the choice buttons to progress in this interactive fiction piece.
-
-This is a piece of chiefly text based interactive fiction (IF), about the the emotional toll post dealing with insect infestations. 
-
-IF must interact with input meaningfully (Montfort, 2003): In this case, all player choices converge on the same psychological endpoint, 
-develop regardless of treatment approach.The key point for the protagonist's sanity slipage is the discovery of the in-world actual infestion. The illusion of agency mirrors the protagonist's loss of control over their own perception of reality.
-The player should question if the final sequence occurs in the protagonists head or in the IF's material world.For the peak of the narrative, I have referred to delusory parasitosis (DP)- a condition in which the sufferer remains convinced they are dealing with an infestation, experiencing itching, crawling, pinprick sensations known as formication and paresthesia [Hinkle, 2000]. This complex is derived from being as stated, a delusion – with professionals finding lesions on the skin but no sign of the infestation itself. However one can experience DP post an actual infestation as a trauma response.
-Individuals with DP gather evidence off their own body - skin particles and entrapped hairs and fibers that are insect-like [Hinkle, 2003][Freudenmann]. They overtreat their skin with everything between home remedies and bleach, self-harming in the process. The gendered dimension of delusory parasitosis - with sufferers being disproportionately female [Hinkle, 2000] - intersects with patterns of medical dismissal. This dynamic drives obsessive evidence-gathering and DIY treatment escalation, creating a feedback loop where self-advocacy becomes self-harm.
- 
-
-Bibliography:
-
-Freudenmann, R.W. and Lepping, P. (2009) 'Delusional infestation', Clinical Microbiology Reviews, 22(4), pp. 690-732.
-
-Hinkle, N.C. (2000) 'Delusory parasitosis', American Entomologist, 46(1), pp. 17-25.
-
-Montfort, N. (2003) Twisty Little Passages: An Approach to Interactive Fiction. Cambridge, MA: MIT Press.
-
-Developed with assistance from Claude AI (Anthropic) for:
-- Menu system implementation and game state management (lines 270-320, function draw())
-- Window resize bug fix for button repositioning (line 417, function windowResized())
-- Menu text persistence bug fix (loading state delay, line 255)
-- Code structure consultation and debugging support throughout development
-- Academic research integration and narrative design feedback
-*/
 
 // Variable for story structure json
-let story; 
+let story;
 
 let currentNode = "start"; //Tracks player's current position in the story
 let buttons = [];
@@ -58,22 +26,9 @@ function setup() {
   imageMode(CENTER);
   textFont("Courier New");
   fill(255);
-  noCursor();
-   
-  // Force CSS cursor to none
-  document.body.style.cursor = 'none';
-  
-  // Create HTML cursor element
-  let cursorImg = createImg("BUG.png");
-  cursorImg.id("custom-cursor");
-  cursorImg.style('position', 'absolute');
-  cursorImg.style('pointer-events', 'none'); // allows clicking through it
-  cursorImg.style('z-index', '9999'); // stays on top of everything
-  cursorImg.style('width', '75px');
-  cursorImg.style('height', '60px');
 
   gameState = "loading"; // short delay to ensure proper initialization before showing menu
-   setTimeout(() => {
+  setTimeout(() => {
     gameState = "menu";
   }, 100);
   startTime = millis();
@@ -85,6 +40,7 @@ function draw() {
   grid();
   if (gameState === "loading") {
     //blank screen before menu shows to clear bug
+
     return;
   }
   if (gameState === "menu") {
@@ -109,11 +65,7 @@ function draw() {
         playBtn.remove();
         buttons = [];
 
-        // Clear the canvas immediately
-        background(0);
-        grid();
 
-        // Then change state
         gameState = "playing";
         currentNode = "start";
         visitCount = {};
@@ -122,22 +74,13 @@ function draw() {
       buttons.push(playBtn);
     }
   } else if (gameState === "playing") {
-    // Clear any menu buttons that might have persisted
-    if (
-      currentNode === "start" &&
-      buttons.length > 0 &&
-      buttons[0].html() === "PLAY"
-    ) {
-      for (let btn of buttons) {
-        btn.remove();
-      }
-      buttons = [];
-      updateButtons();
-    }
+
     textSize(22);
 
     text(story[currentNode].text, width / 4, 50, width / 2, height - 200);
-    if (  // console message would show after three visits to each node
+
+    // Show warning after three visits to loop nodes
+    if (
       (currentNode === "Inspect bites" ||
         currentNode === "Google bug bites" ||
         currentNode === "Scratch") &&
@@ -156,16 +99,14 @@ function draw() {
 
     // Display door image at start node
     if (currentNode === "start") {
-      imageMode(CENTER);
       image(doorImg, width / 2, height / 3, 350, 350);
     }
   }
-    // fixed here custom cursor not showing over buttons with Claude  
-    // Update cursor position (at the very end)
+  // Update cursor position  
   let cursor = select("#custom-cursor");
-  cursor.position(mouseX - 37.5, mouseY - 30); // offset to center it
+  cursor.position(mouseX - 37.5, mouseY - 30); 
 
-  //image(bugImg, mouseX, mouseY, 75, 60)
+
 }
 
 function updateButtons() {
@@ -209,6 +150,7 @@ function updateButtons() {
     btn.style('cursor', 'none');
     btn.mousePressed(() => {
       currentNode = options[key];
+
       // Track visits for loop nodes
       if (!visitCount[currentNode]) {
         visitCount[currentNode] = 0;
@@ -232,7 +174,7 @@ function grid() {
 }
 
 function keyPressed() {
-  // Adding the ENTER and F keys for fullscreen mode - thought ENTER makes more sense
+  //Adding the ENTER and F keys for fullscreen mode - thought ENTER makes more sense
   if (key === "f" || key === "F" || key === "Enter" || key === "ENTER") {
     let fs = fullscreen();
     fullscreen(!fs);
